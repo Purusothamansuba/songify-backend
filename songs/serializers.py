@@ -8,6 +8,12 @@ class SongSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class SongListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Song
+        fields = ['id', 'title', 'artist']
+
+
 class PlaylistSerializer(serializers.ModelSerializer):
     class Meta:
         model = Playlist

@@ -1,31 +1,48 @@
 from rest_framework import viewsets
 from .models import Song, Playlist, PlaylistSong, Like, History
 from .serializers import (
-    SongSerializer, PlaylistSerializer,
-    PlaylistSongSerializer, LikeSerializer, HistorySerializer
+    SongSerializer, SongListSerializer,
+    PlaylistSerializer, PlaylistSongSerializer,
+    LikeSerializer, HistorySerializer
 )
 
 
 class SongViewSet(viewsets.ModelViewSet):
-    queryset = Song.objects.all()
-    serializer_class = SongSerializer
+
+    def get_queryset(self):
+        return Song.objects.only(
+            'id', 'title', 'artist', 'album', 'duration'
+        ).order_by('-created_at')
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return SongListSerializer
+        return SongSerializer
 
 
 class PlaylistViewSet(viewsets.ModelViewSet):
-    queryset = Playlist.objects.all()
     serializer_class = PlaylistSerializer
+
+    def get_queryset(self):
+        return Playlist.objects.select_related('user')
 
 
 class PlaylistSongViewSet(viewsets.ModelViewSet):
-    queryset = PlaylistSong.objects.all()
     serializer_class = PlaylistSongSerializer
+
+    def get_queryset(self):
+        return PlaylistSong.objects.select_related('playlist', 'song')
 
 
 class LikeViewSet(viewsets.ModelViewSet):
-    queryset = Like.objects.all()
     serializer_class = LikeSerializer
+
+    def get_queryset(self):
+        return Like.objects.select_related('user', 'song')
 
 
 class HistoryViewSet(viewsets.ModelViewSet):
-    queryset = History.objects.all()
     serializer_class = HistorySerializer
+
+    def get_queryset(self):
+        return History.objects.select_related('user', 'song')

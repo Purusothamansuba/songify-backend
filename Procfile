@@ -1,1 +1,1 @@
-web: python manage.py migrate && python manage.py collectstatic --noinput && gunicorn songify.wsgi
+web: python manage.py showmigrations && python manage.py migrate && gunicorn songify.wsgi

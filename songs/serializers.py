@@ -11,7 +11,7 @@ class SongSerializer(serializers.ModelSerializer):
 class SongListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Song
-        fields = ['id', 'title', 'artist']
+        fields = ['id', 'title', 'artist', 'file_url', 'cover_image']
 
 
 class PlaylistSerializer(serializers.ModelSerializer):

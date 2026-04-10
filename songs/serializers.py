@@ -1,7 +1,10 @@
 from rest_framework import serializers
 from .models import Song, Playlist, PlaylistSong, Like, History
 
-
+ALLOWED_EXTENSIONS = {
+    '.mp3', '.wav', '.flac', '.ogg',
+    '.m4a', '.aac', '.opus'
+}
 # ✅ Existing serializers (unchanged)
 
 class SongSerializer(serializers.ModelSerializer):
@@ -60,9 +63,12 @@ class SongUploadSerializer(serializers.ModelSerializer):
         read_only_fields = ['file_url']
 
     # Optional validation
-    def validate_file(self, file):
-        if not file.name.endswith('.mp3'):
-            raise serializers.ValidationError("Only MP3 files allowed")
-        if file.size > 50 * 1024 * 1024:
-            raise serializers.ValidationError("Max size 50MB")
-        return file
+    def validate_file(self, value):
+        ext = '.' + value.name.lower().rsplit('.', 1)[-1]
+
+        if ext not in ALLOWED_EXTENSIONS:
+            raise serializers.ValidationError(
+                f"Unsupported format: {ext}"
+            )
+
+        return value

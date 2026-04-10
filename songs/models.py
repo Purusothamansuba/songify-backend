@@ -6,7 +6,7 @@ class Song(models.Model):
     title = models.CharField(max_length=200, db_index=True)
     artist = models.CharField(max_length=200, db_index=True)
     album = models.CharField(max_length=200, blank=True)
-    duration = models.IntegerField()
+    duration = models.IntegerField(null=True, blank=True)
     file_url = models.URLField()
     cover_image = models.URLField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
